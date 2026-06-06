@@ -85,7 +85,6 @@ const translations: Record<Language, any> = {
     freeLegalAid: "Free Legal Aid",
     government: "Government",
     emergency: "Emergency",
-    // 15 Tenant Scenarios
     scenario1: "Illegal Lockout / Eviction",
     scenario2: "Illegal Utility Shutoff",
     scenario3: "Harassment by Landlord",
@@ -108,7 +107,6 @@ const translations: Record<Language, any> = {
     question2: "How many days notice did the letter specify?",
     option3: "Less than 30 days",
     option4: "30 days or more",
-    // Verdicts for original 5 scenarios
     verdict_illegal_lockout: "Your landlord cannot lock you out without a court order and 30 days written notice. This is a criminal offense under Kenyan law.",
     verdict_illegal_notice: "The Landlord & Tenant Act requires minimum 30 days written notice. Your landlord's notice is legally invalid.",
     verdict_valid_notice: "Valid notice period. Your landlord followed the legal requirement. Seek legal advice about your next steps.",
@@ -116,7 +114,6 @@ const translations: Record<Language, any> = {
     verdict_harassment: "Threats, intimidation, or interference with peaceful enjoyment of property violates Section 41 of the Landlord & Tenant Act.",
     verdict_deposit_dispute: "Landlords must return deposits within 30 days of tenancy end or provide written reasons for deductions.",
     verdict_rent_increase: "Rent cannot be increased without proper notice (minimum 30 days). Controlled tenancies require approval from Rent Tribunal.",
-    // Verdicts for new scenarios
     verdict_illegal_entry: "Landlords cannot enter your home without proper notice (24 hours) or without your consent except in emergencies. This violates your right to quiet enjoyment.",
     verdict_retaliatory_eviction: "It is illegal for a landlord to evict you because you reported a violation or requested repairs. This is retaliatory eviction and is prohibited by law.",
     verdict_repairs_needed: "Landlords are required to maintain the property in habitable condition. Failure to make necessary repairs violates the Landlord & Tenant Act.",
@@ -602,7 +599,6 @@ export default function Home() {
     ? legalAidContacts 
     : legalAidContacts.filter(c => c.category === selectedCategory);
 
-  // ALL 15 TENANT SCENARIOS - Updated list
   const scenariosList = [
     { id: "lockout", name: t.scenario1, icon: IconDoor, color: "red" },
     { id: "utility_shutoff", name: t.scenario2, icon: IconBulb, color: "yellow" },
@@ -649,7 +645,6 @@ export default function Home() {
       paddingBottom: isMobile ? "80px" : "20px"
     }}>
       <Container size="sm" px={0}>
-        {/* Header */}
         <Paper p={isMobile ? "md" : "xl"} radius="lg" style={{ background: isDark ? "#2d2d2d" : "linear-gradient(135deg, #2563eb 0%, #4f46e5 100%)", color: "white", marginBottom: "16px" }}>
           <Group justify="space-between" align="center" wrap="nowrap">
             <Group gap="sm" wrap="nowrap">
@@ -705,7 +700,6 @@ export default function Home() {
           </Group>
         </Paper>
 
-        {/* Mobile Menu */}
         <Modal opened={mobileMenuOpen} onClose={() => setMobileMenuOpen(false)} title={<Text fw={700}>📱 {t.menu}</Text>} fullScreen={isMobile} transitionProps={{ transition: 'slide-up' }}>
           <Stack gap="md">
             <Button size="lg" variant="light" leftSection={<IconPhone size={20} />} onClick={() => { setShowLegalAid(true); setMobileMenuOpen(false); }}>
@@ -720,7 +714,6 @@ export default function Home() {
           </Stack>
         </Modal>
 
-        {/* Tabs */}
         {!mobileMenuOpen && (
           <Tabs value={activeTab} onChange={setActiveTab} mb="md">
             <Tabs.List grow>
@@ -737,7 +730,7 @@ export default function Home() {
           </Tabs>
         )}
 
-        {/* Tenant Flow with 15 Scenarios */}
+        {/* Tenant Flow */}
         {!mobileMenuOpen && activeTab === "tenant" && (
           <Paper p={isMobile ? "md" : "xl"} radius="lg" withBorder>
             {!verdict ? (
@@ -808,7 +801,16 @@ export default function Home() {
             {!calculationResult ? (
               <>
                 <Title order={3} mb="md">🏠 {t.propertyValue}</Title>
-                <NumberInput size="lg" placeholder={t.propertyPlaceholder} value={propertyValue} onChange={setPropertyValue} thousandSeparator="," min={0} mb="lg" styles={{ input: { minHeight: "52px", fontSize: "16px" } }} />
+                <NumberInput
+                  size="lg"
+                  placeholder={t.propertyPlaceholder}
+                  value={propertyValue === null ? undefined : propertyValue}
+                  onChange={setPropertyValue}
+                  thousandSeparator=","
+                  min={0}
+                  mb="lg"
+                  styles={{ input: { minHeight: "52px", fontSize: "16px" } }}
+                />
                 <Title order={4} mb="sm">📍 {t.propertyType}</Title>
                 <Radio.Group value={propertyType} onChange={setPropertyType} mb="lg">
                   <Stack gap="sm">
@@ -846,7 +848,6 @@ export default function Home() {
         {/* Rent Calculator */}
         {!mobileMenuOpen && activeTab === "calculator" && <RentCalculator language={language} t={t} />}
 
-        {/* Footer */}
         {!mobileMenuOpen && (
           <div style={{ textAlign: "center", marginTop: "24px" }}>
             <Badge size="md" variant="light">⚖️ {activeTab === "tenant" ? t.tenantTag : activeTab === "buyer" ? t.buyerTag : t.calculatorMode}</Badge>
@@ -854,7 +855,6 @@ export default function Home() {
           </div>
         )}
 
-        {/* History Modal */}
         <Modal opened={historyModalOpened} onClose={closeHistory} title={<Text fw={700} size="xl">📜 {t.history}</Text>} size="lg" fullScreen={isMobile} transitionProps={{ transition: isMobile ? 'slide-up' : 'fade' }}>
           {savedCalculations.length === 0 ? <Text c="dimmed" ta="center" py="xl">{t.noHistory}</Text> : (
             <ScrollArea h={isMobile ? "70vh" : 400}>
@@ -873,7 +873,6 @@ export default function Home() {
           <Button fullWidth mt="md" onClick={closeHistory} size="lg">{t.backToHome}</Button>
         </Modal>
 
-        {/* Legal Aid Modal */}
         <Modal opened={showLegalAid} onClose={() => setShowLegalAid(false)} title={<Text fw={700} size="xl">📞 {t.legalAidTitle}</Text>} size="xl" fullScreen={isMobile} transitionProps={{ transition: isMobile ? 'slide-up' : 'fade' }}>
           <Stack gap="md">
             <Group grow gap="xs">
@@ -907,7 +906,6 @@ export default function Home() {
           <Button fullWidth mt="md" onClick={() => setShowLegalAid(false)} size="lg">{t.backToHome}</Button>
         </Modal>
 
-        {/* Coming Soon Modal */}
         <Modal opened={comingSoonOpened} onClose={closeComingSoon} title={<Text fw={700} size="xl">❤️ {t.comingSoon}</Text>} fullScreen={isMobile} transitionProps={{ transition: isMobile ? 'slide-up' : 'fade' }}>
           <Text>{t.comingSoonDesc}</Text>
           <Space h="md" />
