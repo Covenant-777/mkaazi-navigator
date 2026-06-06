@@ -1,11 +1,210 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Mobile-first base styles */
+:root {
+  --touch-target-min: 44px;
+  --spacing-xs: 8px;
+  --spacing-sm: 12px;
+  --spacing-md: 16px;
+  --spacing-lg: 24px;
+  --spacing-xl: 32px;
+}
+
 * {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html {
+  font-size: 16px;
+  -webkit-text-size-adjust: 100%;
 }
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  min-height: 100vh;
+  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Better touch targets */
+button, 
+a, 
+[role="button"],
+.mantine-Button-root,
+.mantine-Select-input,
+.mantine-NumberInput-input {
+  min-height: var(--touch-target-min);
+  touch-action: manipulation;
+}
+
+/* Prevent zoom on input focus on iOS */
+input, 
+select, 
+textarea,
+.mantine-Input-input {
+  font-size: 16px !important;
+}
+
+/* Improve scrolling */
+.mantine-ScrollArea-viewport > div {
+  display: block !important;
+}
+
+/* Better spacing for mobile */
+@media (max-width: 768px) {
+  .container {
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+  
+  .mantine-Paper-root {
+    padding: 16px !important;
+  }
+  
+  .mantine-Title-root {
+    font-size: 1.5rem !important;
+  }
+}
+
+/* Smooth transitions */
+.mantine-Button-root {
+  transition: transform 0.1s ease, background-color 0.2s ease;
+}
+
+.mantine-Button-root:active {
+  transform: scale(0.98);
+}
+
+/* Better modal on mobile */
+@media (max-width: 768px) {
+  .mantine-Modal-content {
+    border-radius: 20px 20px 0 0 !important;
+    margin-top: auto !important;
+  }
+  
+  .mantine-Modal-inner {
+    align-items: flex-end !important;
+  }
+}
+
+/* Loading state */
+.loading-skeleton {
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+/* Better bottom sheet for mobile modals */
+.mobile-bottom-sheet .mantine-Modal-content {
+  border-radius: 20px 20px 0 0;
+  margin-top: auto;
+}
+
+/* Improved tap highlights */
+.mantine-Button-root:focus-visible,
+.mantine-Select-input:focus-visible,
+.mantine-NumberInput-input:focus-visible {
+  outline: 2px solid #4f46e5;
+  outline-offset: 2px;
+}
+
+/* Better card spacing on mobile */
+@media (max-width: 640px) {
+  .mantine-Card-root {
+    padding: 12px !important;
+  }
+  
+  .mantine-Group-root {
+    gap: 8px !important;
+  }
+  
+  .mantine-Stack-root {
+    gap: 12px !important;
+  }
+}
+
+/* Dark mode overrides */
+[data-mantine-color-scheme='dark'] {
+  --mantine-color-body: #1a1a1a;
+}
+
+[data-mantine-color-scheme='dark'] body {
+  background-color: #1a1a1a;
+}
+
+[data-mantine-color-scheme='dark'] .mantine-Paper-root {
+  background-color: #2d2d2d;
+  border-color: #404040;
+}
+
+[data-mantine-color-scheme='dark'] .mantine-Text-root {
+  color: #e0e0e0;
+}
+
+[data-mantine-color-scheme='dark'] .mantine-Title-root {
+  color: #ffffff;
+}
+
+[data-mantine-color-scheme='dark'] .mantine-Card-root {
+  background-color: #2d2d2d;
+  border-color: #404040;
+}
+
+[data-mantine-color-scheme='dark'] .mantine-Button-root[data-variant="outline"] {
+  border-color: #555;
+  color: #e0e0e0;
+}
+
+[data-mantine-color-scheme='dark'] .mantine-Button-root[data-variant="light"] {
+  background-color: #3d3d3d;
+  color: #e0e0e0;
+}
+
+[data-mantine-color-scheme='dark'] .mantine-Button-root[data-variant="subtle"] {
+  color: #e0e0e0;
+}
+
+[data-mantine-color-scheme='dark'] .mantine-Alert-root {
+  background-color: #3d3d3d;
+  border-color: #555;
+}
+
+[data-mantine-color-scheme='dark'] .mantine-Badge-root {
+  background-color: #3d3d3d;
+}
+
+[data-mantine-color-scheme='dark'] .mantine-Modal-root .mantine-Paper-root {
+  background-color: #2d2d2d;
+}
+
+[data-mantine-color-scheme='dark'] .mantine-Select-input,
+[data-mantine-color-scheme='dark'] .mantine-NumberInput-input {
+  background-color: #3d3d3d;
+  border-color: #555;
+  color: #e0e0e0;
+}
+
+[data-mantine-color-scheme='dark'] .mantine-Radio-label {
+  color: #e0e0e0;
+}
+
+[data-mantine-color-scheme='dark'] .mantine-Divider-root {
+  border-color: #404040;
+}
+
+[data-mantine-color-scheme='dark'] .mantine-Input-label {
+  color: #e0e0e0;
+}
+
+[data-mantine-color-scheme='dark'] .mantine-Radio-radio {
+  background-color: #3d3d3d;
+  border-color: #555;
 }

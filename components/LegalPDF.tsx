@@ -115,10 +115,27 @@ interface LegalPDFProps {
 }
 
 export const LegalPDF = ({ type, data, language }: LegalPDFProps) => {
+  // Safe check for data
+  if (!data) {
+    return (
+      <Document>
+        <Page size="A4" style={styles.page}>
+          <View style={styles.header}>
+            <Text style={styles.title}>MKAAZI NAVIGATOR</Text>
+            <Text style={styles.subtitle}>Legal Document</Text>
+          </View>
+          <View style={styles.section}>
+            <Text>No data available for this document.</Text>
+          </View>
+        </Page>
+      </Document>
+    );
+  }
+
   const currentDate = new Date().toLocaleDateString();
   const refNumber = `MKAAZI-${Date.now()}-${Math.random().toString(36).substr(2, 6).toUpperCase()}`;
 
-  const translations = {
+  const translations: Record<string, any> = {
     en: {
       title: 'MKAAZI NAVIGATOR - LEGAL DOCUMENT',
       issuedBy: 'Mkaazi Navigator Legal Aid',
@@ -220,8 +237,12 @@ export const LegalPDF = ({ type, data, language }: LegalPDFProps) => {
     },
   };
 
-  const t = translations[language];
+  const t = translations[language] || translations.en;
   const isTenant = type === 'tenant';
+
+  // Safe access for tenant data
+  const verdictType = isTenant ? (data.verdict?.type || data.type || 'warning') : 'info';
+  const verdictMessage = isTenant ? (data.verdict?.message || data.message || 'Legal guidance provided') : '';
 
   return (
     <Document>
@@ -244,17 +265,17 @@ export const LegalPDF = ({ type, data, language }: LegalPDFProps) => {
             <View style={styles.section}>
               <Text style={styles.sectionTitle}>{t.tenant.scenario}</Text>
               
-              <View style={data.verdict.type === 'danger' || data.verdict.type === 'warning' ? styles.warningBox : styles.successBox}>
+              <View style={verdictType === 'error' || verdictType === 'danger' ? styles.warningBox : styles.successBox}>
                 <Text style={styles.label}>{t.tenant.violation}</Text>
-                <Text>{data.verdict.message}</Text>
+                <Text>{verdictMessage}</Text>
               </View>
               
               <Text style={styles.label}>{t.tenant.recommendation}:</Text>
-              {t.tenant.action1 && <Text>• {t.tenant.action1}</Text>}
-              {t.tenant.action2 && <Text>• {t.tenant.action2}</Text>}
-              {t.tenant.action3 && <Text>• {t.tenant.action3}</Text>}
-              {t.tenant.action4 && <Text>• {t.tenant.action4}</Text>}
-              {t.tenant.action5 && <Text>• {t.tenant.action5}</Text>}
+              <Text>• {t.tenant.action1}</Text>
+              <Text>• {t.tenant.action2}</Text>
+              <Text>• {t.tenant.action3}</Text>
+              <Text>• {t.tenant.action4}</Text>
+              <Text>• {t.tenant.action5}</Text>
             </View>
           </>
         ) : (
@@ -265,33 +286,33 @@ export const LegalPDF = ({ type, data, language }: LegalPDFProps) => {
               <View style={styles.table}>
                 <View style={styles.tableRow}>
                   <Text style={styles.tableLabel}>Property Value:</Text>
-                  <Text style={styles.tableValue}>KES {data.propertyValue.toLocaleString()}</Text>
+                  <Text style={styles.tableValue}>KES {data.propertyValue?.toLocaleString() || '0'}</Text>
                 </View>
                 <View style={styles.tableRow}>
                   <Text style={styles.tableLabel}>Property Type:</Text>
-                  <Text style={styles.tableValue}>{data.propertyType === 'urban' ? 'Urban (City/Municipality)' : 'Rural (Agricultural Land)'}</Text>
+                  <Text style={styles.tableValue}>{data.type === 'urban' ? 'Urban (City/Municipality)' : 'Rural (Agricultural Land)'}</Text>
                 </View>
                 <View style={styles.tableRow}>
-                  <Text style={styles.tableLabel}>{t.buyer.stampDuty} ({data.rate}%):</Text>
-                  <Text style={styles.tableValue}>KES {data.stampDuty.toLocaleString()}</Text>
+                  <Text style={styles.tableLabel}>{t.buyer.stampDuty} ({data.rate || 0}%):</Text>
+                  <Text style={styles.tableValue}>KES {data.stampDuty?.toLocaleString() || '0'}</Text>
                 </View>
                 <View style={styles.tableRow}>
                   <Text style={styles.tableLabel}>{t.buyer.legalFees}:</Text>
-                  <Text style={styles.tableValue}>KES {data.legalFees.toLocaleString()}</Text>
+                  <Text style={styles.tableValue}>KES {data.legalFees?.toLocaleString() || '0'}</Text>
                 </View>
                 <View style={styles.tableRow}>
                   <Text style={styles.tableLabel}>{t.buyer.totalCost}:</Text>
-                  <Text style={styles.tableValue}>KES {data.total.toLocaleString()}</Text>
+                  <Text style={styles.tableValue}>KES {data.total?.toLocaleString() || '0'}</Text>
                 </View>
               </View>
             </View>
 
             <View style={styles.section}>
               <Text style={styles.sectionTitle}>{t.buyer.nextSteps}</Text>
-              {t.buyer.step1 && <Text>1. {t.buyer.step1}</Text>}
-              {t.buyer.step2 && <Text>2. {t.buyer.step2}</Text>}
-              {t.buyer.step3 && <Text>3. {t.buyer.step3}</Text>}
-              {t.buyer.step4 && <Text>4. {t.buyer.step4}</Text>}
+              <Text>1. {t.buyer.step1}</Text>
+              <Text>2. {t.buyer.step2}</Text>
+              <Text>3. {t.buyer.step3}</Text>
+              <Text>4. {t.buyer.step4}</Text>
             </View>
           </>
         )}
