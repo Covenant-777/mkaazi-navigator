@@ -8,7 +8,7 @@ import {
   IconShield, 
   IconScale, 
   IconHeartHandshake,
-  IconSOS
+  IconSos
 } from "@tabler/icons-react";
 
 interface SOSButtonProps {
@@ -66,7 +66,7 @@ export function SOSButton({ language, t }: SOSButtonProps) {
         variant="filled"
         color="red"
         size="lg"
-        leftSection={<IconPhone size={24} />}
+        leftSection={<IconSos size={24} />}
         onClick={open}
       >
         🚨 {t.emergencyHelp}
