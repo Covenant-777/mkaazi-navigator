@@ -391,7 +391,8 @@ export default function Home() {
   const [step, setStep] = useState("scenarioSelect");
   const [verdict, setVerdict] = useState<any>(null);
   
-  const [propertyValue, setPropertyValue] = useState<number | null>(null);
+  // Changed from null to undefined to fix NumberInput error
+  const [propertyValue, setPropertyValue] = useState<number | undefined>(undefined);
   const [propertyType, setPropertyType] = useState("urban");
   const [calculationResult, setCalculationResult] = useState<any>(null);
 
@@ -513,7 +514,7 @@ export default function Home() {
   };
   
   const clearCalculation = () => {
-    setPropertyValue(null);
+    setPropertyValue(undefined);
     setPropertyType("urban");
     setCalculationResult(null);
   };
@@ -804,7 +805,7 @@ export default function Home() {
                 <NumberInput
                   size="lg"
                   placeholder={t.propertyPlaceholder}
-                  value={propertyValue === null ? undefined : propertyValue}
+                  value={propertyValue}
                   onChange={setPropertyValue}
                   thousandSeparator=","
                   min={0}
