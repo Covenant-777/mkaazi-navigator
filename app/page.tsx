@@ -26,7 +26,7 @@ import {
   Stack,
   Group,
   Radio,
-  NumberInput,
+  TextInput,
   Loader,
   ThemeIcon,
   Card,
@@ -391,8 +391,8 @@ export default function Home() {
   const [step, setStep] = useState("scenarioSelect");
   const [verdict, setVerdict] = useState<any>(null);
   
-  // Changed from null to undefined to fix NumberInput error
-  const [propertyValue, setPropertyValue] = useState<number | undefined>(undefined);
+  // Using string for input to avoid NumberInput type issues
+  const [propertyValueStr, setPropertyValueStr] = useState<string>("");
   const [propertyType, setPropertyType] = useState("urban");
   const [calculationResult, setCalculationResult] = useState<any>(null);
 
@@ -484,7 +484,8 @@ export default function Home() {
   };
 
   const calculateStampDuty = () => {
-    if (!propertyValue || propertyValue <= 0) {
+    const propertyValue = parseFloat(propertyValueStr);
+    if (isNaN(propertyValue) || propertyValue <= 0) {
       notifications.show({
         title: "Error",
         message: "Please enter a valid property value",
@@ -514,7 +515,7 @@ export default function Home() {
   };
   
   const clearCalculation = () => {
-    setPropertyValue(undefined);
+    setPropertyValueStr("");
     setPropertyType("urban");
     setCalculationResult(null);
   };
@@ -528,7 +529,7 @@ export default function Home() {
     } else {
       setActiveTab("buyer");
       setCalculationResult(calc.data);
-      setPropertyValue(calc.data.propertyValue);
+      setPropertyValueStr(calc.data.propertyValue.toString());
       setPropertyType(calc.data.type);
     }
     closeHistory();
@@ -796,19 +797,18 @@ export default function Home() {
           </Paper>
         )}
 
-        {/* Buyer Flow */}
+        {/* Buyer Flow - Using TextInput instead of NumberInput */}
         {!mobileMenuOpen && activeTab === "buyer" && (
           <Paper p={isMobile ? "md" : "xl"} radius="lg" withBorder>
             {!calculationResult ? (
               <>
                 <Title order={3} mb="md">🏠 {t.propertyValue}</Title>
-                <NumberInput
+                <TextInput
                   size="lg"
+                  type="number"
                   placeholder={t.propertyPlaceholder}
-                  value={propertyValue}
-                  onChange={setPropertyValue}
-                  thousandSeparator=","
-                  min={0}
+                  value={propertyValueStr}
+                  onChange={(e) => setPropertyValueStr(e.target.value)}
                   mb="lg"
                   styles={{ input: { minHeight: "52px", fontSize: "16px" } }}
                 />
