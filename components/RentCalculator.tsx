@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Card, Stack, Group, Text, NumberInput, Button, Alert, Divider, Title, Paper } from "@mantine/core";
+import { Card, Stack, Group, Text, TextInput, Button, Alert, Divider, Title, Paper } from "@mantine/core";
 import { IconCalculator, IconCheck, IconAlertCircle } from "@tabler/icons-react";
 
 interface RentCalculatorProps {
@@ -10,12 +10,15 @@ interface RentCalculatorProps {
 }
 
 export function RentCalculator({ language, t }: RentCalculatorProps) {
-  const [monthlyRent, setMonthlyRent] = useState<number | null>(null);
-  const [monthlyIncome, setMonthlyIncome] = useState<number | null>(null);
+  const [monthlyRentStr, setMonthlyRentStr] = useState<string>("");
+  const [monthlyIncomeStr, setMonthlyIncomeStr] = useState<string>("");
   const [result, setResult] = useState<{ percentage: number; isAffordable: boolean; recommendation: string } | null>(null);
 
   const calculateAffordability = () => {
-    if (!monthlyRent || !monthlyIncome || monthlyIncome <= 0) {
+    const monthlyRent = parseFloat(monthlyRentStr);
+    const monthlyIncome = parseFloat(monthlyIncomeStr);
+    
+    if (isNaN(monthlyRent) || isNaN(monthlyIncome) || monthlyIncome <= 0) {
       return;
     }
 
@@ -35,8 +38,8 @@ export function RentCalculator({ language, t }: RentCalculatorProps) {
   };
 
   const reset = () => {
-    setMonthlyRent(null);
-    setMonthlyIncome(null);
+    setMonthlyRentStr("");
+    setMonthlyIncomeStr("");
     setResult(null);
   };
 
@@ -50,25 +53,23 @@ export function RentCalculator({ language, t }: RentCalculatorProps) {
       
       {!result ? (
         <>
-          <NumberInput
+          <TextInput
             label={t.monthlyRent}
             placeholder="e.g., 25000"
-            value={monthlyRent}
-            onChange={setMonthlyRent}
-            thousandSeparator=","
-            min={0}
+            value={monthlyRentStr}
+            onChange={(e) => setMonthlyRentStr(e.target.value)}
+            type="number"
             mb="md"
             size="lg"
             styles={{ input: { minHeight: "52px", fontSize: "16px" } }}
           />
           
-          <NumberInput
+          <TextInput
             label={t.monthlyIncome}
             placeholder="e.g., 100000"
-            value={monthlyIncome}
-            onChange={setMonthlyIncome}
-            thousandSeparator=","
-            min={0}
+            value={monthlyIncomeStr}
+            onChange={(e) => setMonthlyIncomeStr(e.target.value)}
+            type="number"
             mb="lg"
             size="lg"
             styles={{ input: { minHeight: "52px", fontSize: "16px" } }}
@@ -94,11 +95,11 @@ export function RentCalculator({ language, t }: RentCalculatorProps) {
             <Stack gap="xs">
               <Group justify="space-between" wrap="wrap">
                 <Text fw={500}>{t.monthlyRent}:</Text>
-                <Text>{formatMoney(monthlyRent!)}</Text>
+                <Text>{formatMoney(parseFloat(monthlyRentStr))}</Text>
               </Group>
               <Group justify="space-between" wrap="wrap">
                 <Text fw={500}>{t.monthlyIncome}:</Text>
-                <Text>{formatMoney(monthlyIncome!)}</Text>
+                <Text>{formatMoney(parseFloat(monthlyIncomeStr))}</Text>
               </Group>
               <Divider />
               <Group justify="space-between" wrap="wrap">

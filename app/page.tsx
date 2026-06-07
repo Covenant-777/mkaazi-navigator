@@ -391,7 +391,7 @@ export default function Home() {
   const [step, setStep] = useState("scenarioSelect");
   const [verdict, setVerdict] = useState<any>(null);
   
-  // Using string for input to avoid NumberInput type issues
+  // Using string for input to avoid type issues
   const [propertyValueStr, setPropertyValueStr] = useState<string>("");
   const [propertyType, setPropertyType] = useState("urban");
   const [calculationResult, setCalculationResult] = useState<any>(null);
